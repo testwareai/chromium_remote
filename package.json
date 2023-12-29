@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "playwright": "^1.40.1"
+  },
+  "dependencies": {
+    "localtunnel": "^2.0.2"
   }
 }
