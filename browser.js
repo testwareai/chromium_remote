@@ -1,11 +1,15 @@
 const { chromium } = require("playwright");
 
 (async () => {
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--remote-debugging-port=9222"],
-  });
-  console.log(`WebSocket Endpoint: ws://localhost:9222`);
+  // const browser = await chromium.launch({
+  //   headless: true,
+  //   args: ["--remote-debugging-port=9222"],
+  // });
+
+  const browserServer = await chromium.launchServer();
+  const wsEndpoint = browserServer.wsEndpoint();
+  console.log(wsEndpoint);
+  // console.log(`WebSocket Endpoint: ws://localhost:9222`);
   // Keep the browser open
   await new Promise((resolve) => setTimeout(resolve, 100000));
 })();
