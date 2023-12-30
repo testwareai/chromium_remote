@@ -5,7 +5,7 @@ const express = require("express");
 const app = express();
 
 // Define a port to listen to
-const port = 3000;
+const port = 3010;
 
 // Set up a route for the root URL ('/')
 app.get("/", (req, res) => {
@@ -13,6 +13,6 @@ app.get("/", (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server running on port ${port}`);
 });
