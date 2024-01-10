@@ -4,6 +4,8 @@ const { chromium } = require("playwright");
   const browserServer = await chromium.launchServer({
     port: 8080,
     wsPath: "chromium",
+    channel: "chrome",
+    timeout: 15000,
   });
   const wsEndpoint = browserServer.wsEndpoint();
   console.log(wsEndpoint);
