@@ -6,7 +6,7 @@ const { chromium } = require("playwright");
     wsPath: "chromium",
     channel: "chrome",
     timeout: 15000,
-    ignoreHTTPSErrors: true,
+    args: ["--disable-web-security"],
   });
   const wsEndpoint = browserServer.wsEndpoint();
   console.log(wsEndpoint);
