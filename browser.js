@@ -3,11 +3,20 @@ const { chromium } = require("playwright");
 
 // Initialize express app
 const app = express();
-const port = 3000; // This is the Express server port
+const port = 3009; // This is the Express server port
 
 // Middleware to parse JSON body
 app.use(express.json());
 
+app.get("/status", async (req, res) => {
+  try {
+    res
+      .status(200)
+      .json({ message: `Server running on http://localhost:${port}` });
+  } catch (e) {
+    res.status(500).json({ message: e });
+  }
+});
 // Define the POST route
 app.post("/getdata", async (req, res) => {
   const { url } = req.body; // Extract 'url' from the request body
