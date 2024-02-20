@@ -39,7 +39,9 @@ app.post("/getdata", async (req, res) => {
     res.json({ bodyText });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to launch the browser" });
+    res
+      .status(500)
+      .json({ error: "Failed to launch the browser", reason: error });
   }
 });
 
