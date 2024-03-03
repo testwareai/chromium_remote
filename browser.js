@@ -11,7 +11,7 @@ app.use(express.json());
 let browser; // Declare the browser variable outside the request handler
 
 async function launchBrowser() {
-  browser = await chromium.launch({ headless: false }); // Launch browser
+  browser = await chromium.launch(); // Launch browser
 }
 
 app.get("/status", async (req, res) => {
