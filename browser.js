@@ -11,7 +11,7 @@ app.use(express.json());
 let browser; // Declare the browser variable outside the request handler
 
 async function launchBrowser() {
-  browser = await chromium.launch();
+  browser = await chromium.launch({ headless: false }); // Launch browser
 }
 
 app.get("/status", async (req, res) => {
@@ -35,7 +35,15 @@ app.post("/getdata", async (req, res) => {
     if (!browser) await launchBrowser(); // Ensure the browser is launched
     const context = await browser.newContext();
     const page = await context.newPage();
-    await page.goto(url);
+
+    // Try to navigate to the page, with handling for navigation timeout/failure
+    try {
+      await page.goto(url, { timeout: 15000 });
+    } catch (error) {
+      console.error("Page navigation timed out or failed:", error.message);
+      // Even in case of timeout/failure, we proceed to try and extract the body text.
+    }
+
     const bodyText = await page.evaluate(() => document.body.innerText);
     await context.close(); // Close the context after use
 
@@ -44,7 +52,7 @@ app.post("/getdata", async (req, res) => {
     console.error(error);
     res
       .status(500)
-      .json({ error: "Failed to process the request", reason: error });
+      .json({ error: "Failed to process the request", reason: error.message });
   }
 });
 
