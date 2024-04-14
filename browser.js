@@ -33,7 +33,10 @@ app.post("/getdata", async (req, res) => {
 
   try {
     if (!browser) await launchBrowser(); // Ensure the browser is launched
-    const context = await browser.newContext();
+    const context = await browser.newContext({
+      userAgent:
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/109.0",
+    });
     const page = await context.newPage();
 
     // Try to navigate to the page, with handling for navigation timeout/failure
