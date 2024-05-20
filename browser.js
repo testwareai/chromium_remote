@@ -48,9 +48,10 @@ app.post("/getdata", async (req, res) => {
     }
 
     const bodyText = await page.evaluate(() => document.body.innerText);
+    const formattedText = bodyText.replace(/[^\x00-\x7F]/g, "");
     await context.close(); // Close the context after use
 
-    res.json({ bodyText });
+    res.json({ bodyText: formattedText });
   } catch (error) {
     console.error(error);
     res
