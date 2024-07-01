@@ -1,18 +1,13 @@
-const express = require("express");
-const { chromium } = require("playwright");
+import express from "express";
+import FirecrawlApp from "@mendable/firecrawl-js";
+
 
 // Initialize express app
 const app = express();
-const port = 3009;
+const port = 3010;
 
 // Middleware to parse JSON body
 app.use(express.json());
-
-let browser; // Declare the browser variable outside the request handler
-
-async function launchBrowser() {
-  browser = await chromium.launch(); // Launch browser
-}
 
 app.get("/status", async (req, res) => {
   try {
@@ -26,32 +21,17 @@ app.get("/status", async (req, res) => {
 
 app.post("/getdata", async (req, res) => {
   const { url } = req.body;
-
+  let scrapedData=null
   if (!url) {
     return res.status(400).json({ error: "URL is required" });
   }
 
   try {
-    if (!browser) await launchBrowser(); // Ensure the browser is launched
-    const context = await browser.newContext({
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-    });
-    const page = await context.newPage();
+      const fireCrawl_app = new FirecrawlApp({ apiKey: "fc-d16bd62e11184eceb1f0db569ed67441" });
 
-    // Try to navigate to the page, with handling for navigation timeout/failure
-    try {
-      await page.goto(url, { timeout: 15000 });
-    } catch (error) {
-      console.error("Page navigation timed out or failed:", error.message);
-      // Even in case of timeout/failure, we proceed to try and extract the body text.
-    }
-
-    const bodyText = await page.evaluate(() => document.body.innerText);
-    const formattedText = bodyText.replace(/[^\x00-\x7F]/g, "");
-    await context.close(); // Close the context after use
-
-    res.json({ bodyText: formattedText });
+scrapedData = await fireCrawl_app.scrapeUrl(url);
+    
+    res.status(200).json({ bodyText: scrapedData });
   } catch (error) {
     console.error(error);
     res
@@ -60,13 +40,7 @@ app.post("/getdata", async (req, res) => {
   }
 });
 
-// Close the browser when the server is closing
-process.on("exit", () => {
-  if (browser) browser.close();
-});
 
-launchBrowser().then(() => {
   app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
   });
-});

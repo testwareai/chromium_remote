@@ -1,8 +1,10 @@
 {
+  "type": "module",
   "devDependencies": {
     "playwright": "^1.41.2"
   },
   "dependencies": {
+    "@mendable/firecrawl-js": "^0.0.28",
     "express": "^4.18.2"
   }
 }
